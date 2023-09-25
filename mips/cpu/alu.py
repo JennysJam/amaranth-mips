@@ -1,5 +1,7 @@
 from amaranth import *
 
+from amaranth.sim import Simulator
+
 class ALU(Elaboratable):
     """
     Arithmetic Logic Unit
@@ -25,3 +27,13 @@ class ALU(Elaboratable):
         m.d.comb += self.rd.eq(reg[0:33])
 
         return m
+
+
+def simulate(file: str):
+    alu = ALU()
+
+    sim = Simulator(alu)
+
+    with sim.write_vcd(file):
+        sim.run()
+    
