@@ -1,6 +1,8 @@
 from amaranth import *
 from amaranth.sim import Simulator, Settle, Delay
 
+from mips.cpu.isa import Funct
+
 import random
 
 class ALU(Elaboratable):
@@ -19,10 +21,25 @@ class ALU(Elaboratable):
 
     def elaborate(self, platform):
         m = Module()
-        reg = Signal(33)
-        
+        ureg = Signal(33)
+        ireg = Signal(33, signed=True)
+
         with m.Switch(self.func):
-            pass
+            with m.Case(Funct.ADD):
+                m.d.comb += ureg.eq(self.rs + self.rt)
+                m.d.comb += self.ovf.eq(ureg[-1])
+                m.d.comb += self.rd.eq(ureg)
+            with m.Case(Funct.ADDU):
+                m.d.comb += ureg.eq(self.rs + self.rt)
+                m.d.comb += self.rd.eq(ureg)
+            with m.Case(Funct.ADDI):
+                m.d.comb += ireg.eq(self.rs + self.rt.as_signed())
+                m.d.comb += self.ovf.eq(ireg)
+                m.d.comb += self.rd.eq(ireg)
+            with m.Case(Funct.ADDIU):
+                m.d.comb += ireg.eq(self.rs + self.rt.as_signed())
+                m.d.comb += self.rd.eq(ireg)
+
         return m
 
 
