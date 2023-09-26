@@ -18,7 +18,7 @@ sim_parser = parsers.add_parser(
 sim_parser.add_argument(
     "--out",
     help="output file to store simulation",
-    default="simulation.gtkw"
+    default="simulation.vcd"
 )
 
 synth_parser = parsers.add_parser(

@@ -1,3 +1,6 @@
+from mips.cpu.alu import simulate as alu_simulate
+
 
 def simulate(filename: str):
-    print("Performing da simulation")
+    print("performing alu simulation")
+    alu_simulate(filename)
