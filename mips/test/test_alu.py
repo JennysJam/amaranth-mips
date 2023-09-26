@@ -14,7 +14,7 @@ MAX_32U = 0xff_ff_ff_ff
             (4, 5, 9, 0),
             (8, 8, 16, 0),
             (MAX_32U, 1, 0, 1),
-            (1, -1, 0, 0),
+            (2, -1, 0, 0)
         ]
 )
 def test_add(rs: int, rt: int, rd: int, ovf: bool):
@@ -30,8 +30,8 @@ def test_add(rs: int, rt: int, rd: int, ovf: bool):
         res_rd = yield alu.rd
         res_ovf = yield alu.ovf
 
-        assert ovf == res_ovf, f"Expected {Funct.ADD} {rs: 09x} {rt: 09x} to ovf={ovf} but got {res_ovf} instead"
-        assert rd == res_rd, f"Expected {Funct.ADD} {rs: 09x} {rt: 09x} for rd=={rd: 09x} but got {res_rd: 09x} instead"
+        assert ovf == res_ovf, f"Expected {Funct.ADD} rs:{rs: 09x} rt:{rt: 09x} => rd:{rd: 09x} for ovf == {ovf} but got {res_ovf} instead"
+        assert rd == res_rd, f"Expected {Funct.ADD} rs:{rs: 09x} rt:{rt: 09x} => rd:{rd: 09x} but got {res_rd: 09x} instead"
     
         yield Delay(1e-6)
     

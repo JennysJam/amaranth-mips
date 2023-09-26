@@ -21,31 +21,32 @@ class ALU(Elaboratable):
 
     def elaborate(self, platform):
         m = Module()
-        reg = Signal(33)
+        sreg = Signal(shape=signed(33))
+        ureg = Signal(shape=unsigned(33))
 
         with m.Switch(self.func):
             with m.Case(Funct.ADD):
                 m.d.comb += [
-                    reg.eq(self.rs + self.rt),
-                    self.ovf.eq(reg[-1]),
-                    self.rd.eq(reg)
+                    sreg.eq(self.rs + self.rt),
+                    self.ovf.eq(sreg[-1]),
+                    self.rd.eq(sreg)
                 ]
             with m.Case(Funct.ADDU):
                 m.d.comb += [
-                    reg.eq(self.rs + self.rt), 
-                    self.rd.eq(reg),
+                    ureg.eq(self.rs + self.rt), 
+                    self.rd.eq(ureg),
                     self.ovf.eq(0)
                 ]
             with m.Case(Funct.SUB):
                 m.d.comb += [
-                    reg.eq(self.rs - self.rt),
-                    self.rd.eq(reg),
-                    self.ovf.eq(reg[-1])
+                    sreg.eq(self.rs - self.rt),
+                    self.rd.eq(sreg),
+                    self.ovf.eq(sreg[-1])
                 ]
             with m.Case(Funct.SUBU):
                 m.d.comb += [
-                    reg.eq(self.rs - self.rt),
-                    self.rd.eq(reg),
+                    ureg.eq(self.rs - self.rt),
+                    self.rd.eq(ureg),
                     self.ovf.eq(0)
                 ]
             # Logical combinators
