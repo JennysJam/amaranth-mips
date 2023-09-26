@@ -10,11 +10,6 @@ class Funct(enum.Enum, shape=6):
     "trapping add"
     ADDU = 0b100001
     "non-trapping add"
-    ADDI = 0b001000
-    "Add sign extending"
-    ADDIU = 0b001001
-    "Add sign extending non-trapping"
-
     # div/mul: not implemented
 
     SLL = 0b000000
@@ -29,15 +24,13 @@ class Funct(enum.Enum, shape=6):
     # AND
     AND = 0b100100
     "And"
-    ANDI = 0b001100
-    "Zero Extend and"
     
     NOR = 0b100111
     OR = 0B100101
-    ORI = 0b001101
 
     SUB = 0b100010
     SUBU = 0b100011
 
     XOR = 0b100110
-    XORI = 0b100110
+
+

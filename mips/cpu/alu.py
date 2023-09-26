@@ -21,24 +21,57 @@ class ALU(Elaboratable):
 
     def elaborate(self, platform):
         m = Module()
-        ureg = Signal(33)
-        ireg = Signal(33, signed=True)
+        reg = Signal(33)
 
         with m.Switch(self.func):
             with m.Case(Funct.ADD):
-                m.d.comb += ureg.eq(self.rs + self.rt)
-                m.d.comb += self.ovf.eq(ureg[-1])
-                m.d.comb += self.rd.eq(ureg)
+                m.d.comb += [
+                    reg.eq(self.rs + self.rt),
+                    self.ovf.eq(reg[-1]),
+                    self.rd.eq(reg)
+                ]
             with m.Case(Funct.ADDU):
-                m.d.comb += ureg.eq(self.rs + self.rt)
-                m.d.comb += self.rd.eq(ureg)
-            with m.Case(Funct.ADDI):
-                m.d.comb += ireg.eq(self.rs + self.rt.as_signed())
-                m.d.comb += self.ovf.eq(ireg)
-                m.d.comb += self.rd.eq(ireg)
-            with m.Case(Funct.ADDIU):
-                m.d.comb += ireg.eq(self.rs + self.rt.as_signed())
-                m.d.comb += self.rd.eq(ireg)
+                m.d.comb += [
+                    reg.eq(self.rs + self.rt), 
+                    self.rd.eq(reg),
+                    self.ovf.eq(0)
+                ]
+            with m.Case(Funct.SUB):
+                m.d.comb += [
+                    reg.eq(self.rs - self.rt),
+                    self.rd.eq(reg),
+                    self.ovf.eq(reg[-1])
+                ]
+            with m.Case(Funct.SUBU):
+                m.d.comb += [
+                    reg.eq(self.rs - self.rt),
+                    self.rd.eq(reg),
+                    self.ovf.eq(0)
+                ]
+            # Logical combinators
+            with m.Case(Funct.AND):
+                m.d.comb += [
+                    self.rd.eq(self.rs & self.rt),
+                    self.ovf.eq(0)
+                ]
+            with m.Case(Funct.OR):
+                m.d.comb += [
+                    self.rd.eq(self.rs | self.rt),
+                    self.ovf.eq(0),
+                ]
+            with m.Case(Funct.XOR):
+                m.d.comb += [
+                    self.rd.eq(self.rs ^ self.rt),
+                    self.ovf.eq(0)
+                ]
+            with m.Case(Funct.NOR):
+                m.d.comb += [
+                    self.rd.eq( ~ (self.rs | self.rt) ),
+                    self.ovf.eq(0)
+                ]
+            # Shifters
+            with m.Default():
+                pass # what do?
 
         return m
 
@@ -50,15 +83,30 @@ def simulate(file: str):
 
     def bench():
         test_cases = [
-            (1, 2, 3, 0),
-            (2, 2, 4, 0),
-            (4, 5, 9, 0),
-            (8, 8, 16, 0),
-            (MAX_32U, 1, 0, 1)
-        ]
-        for x, y, res, should_trap in test_cases:
-                print(f"Testing {x:016x} + {y:016x} == {res:016x} {'(traps)' if should_trap else ''}")
+            # (funct, rs, rt, rd, ovf)
+            (Funct.ADD, 1, 2, 3, 0),
+            (Funct.ADD, 2, 2, 4, 0),
+            (Funct.ADD, 4, 5, 9, 0),
+            (Funct.ADD, 8, 8, 16, 0),
+            (Funct.ADD, MAX_32U, 1, 0, 1),
+            (Funct.ADD, 1, -1, 0, 0),
 
+            (Funct.ADD, MAX_32U -1, 1, MAX_32U, 0),
+            (Funct.ADDU, MAX_32U, 1, 0, 0),
+
+            (Funct.SUB, 4, 1, 3, 0),
+            (Funct.SUB, 0, 1, MAX_32U, 1),
+            (Funct.SUBU, 0, 1, MAX_32U, 0),
+
+            (Funct.AND, 0b11, 0b00, 0b00, 0),
+            (Funct.AND, 0b10, 0b11, 0b10, 0),
+            (Funct.AND, 0b11, 0b11, 0b11, 0),
+            
+        ]
+        for fun, x, y, res, should_trap in test_cases:
+                print(f"Test {fun}\t{x: 09x}\t{y: 09x}\t{res: 09x}\t{'(traps)' if should_trap else ''}")
+
+                yield alu.func.eq(fun)
                 yield alu.rs.eq(x)
                 yield alu.rt.eq(y)
                 yield Settle()
@@ -69,10 +117,10 @@ def simulate(file: str):
                 trap = yield alu.ovf
                 if should_trap:
                     assert trap == 1,\
-                        f"Trap {trap} should have triggered didn't on rt:{rs:016x}({x:016x}) + rd:{rt:016x}({y:016x}) => rd:{rd:016x}"
+                        f"Trap {trap} should have triggered didn't on rt:{rs: 09x}({x: 09x}) + rd:{rt: 09x}({y: 09x}) = rd:{rd: 08x}"
                 else:
                     assert rd == res,\
-                        f"rt:{rs:016x}({x:016x}) + rd:{rt:016x}({y:016x}) should be {res:016x} but was instead {rd:016x}"
+                        f"rt:{rs: 09x}({x: 09x}) + rd:{rt: 09x}({y: 09x}) should be {res: 09x} but was instead {rd: 09x}"
                 
                 yield Delay(1e-6)
 
