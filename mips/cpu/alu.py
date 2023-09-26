@@ -12,19 +12,17 @@ class ALU(Elaboratable):
         # input
         self.rs = Signal(32)
         self.rt = Signal(32)
-
+        self.func = Signal(6)
         # output
         self.rd = Signal(32)
-        self.trap = Signal()
+        self.ovf = Signal()
 
     def elaborate(self, platform):
         m = Module()
         reg = Signal(33)
         
-        m.d.comb += reg.eq(self.rs + self.rt)
-
-        m.d.comb += [self.trap.eq(reg[-1]), self.rd.eq(reg)]
-
+        with m.Switch(self.func):
+            pass
         return m
 
 
@@ -51,7 +49,7 @@ def simulate(file: str):
                 rt = yield alu.rs
                 rs = yield alu.rt
                 rd = yield alu.rd
-                trap = yield alu.trap
+                trap = yield alu.ovf
                 if should_trap:
                     assert trap == 1,\
                         f"Trap {trap} should have triggered didn't on rt:{rs:016x}({x:016x}) + rd:{rt:016x}({y:016x}) => rd:{rd:016x}"
