@@ -101,10 +101,22 @@ def simulate(file: str):
             (Funct.AND, 0b11, 0b00, 0b00, 0),
             (Funct.AND, 0b10, 0b11, 0b10, 0),
             (Funct.AND, 0b11, 0b11, 0b11, 0),
-            
+            (Funct.AND, 0b00, 0b00, 0b00, 0),
+
+            (Funct.OR, 0b11, 0b00, 0b11, 0),
+            (Funct.OR, 0b10, 0b01, 0b11, 0),
+            (Funct.OR, 0b01, 0b01, 0b01, 0),
+            (Funct.OR, 0b00, 0b00, 0b00, 0),
+
+            (Funct.XOR, 0b00, 0b00, 0b00, 0),
+            (Funct.XOR, 0b10, 0b00, 0b10, 0),
+            (Funct.XOR, 0b11, 0b00, 0b11, 0),
+            (Funct.XOR, 0b11, 0b01, 0b10, 0),
+            (Funct.XOR, 0b11, 0b10, 0b01, 0),
+
         ]
         for fun, x, y, res, should_trap in test_cases:
-                print(f"Test {fun}\t{x: 09x}\t{y: 09x}\t{res: 09x}\t{'(traps)' if should_trap else ''}")
+                print(f"{fun}\t{x: 09x}\t{y: 09x}\t{res: 09x}\t{'(traps)' if should_trap else ''}", end='')
 
                 yield alu.func.eq(fun)
                 yield alu.rs.eq(x)
@@ -115,13 +127,17 @@ def simulate(file: str):
                 rs = yield alu.rt
                 rd = yield alu.rd
                 trap = yield alu.ovf
-                if should_trap:
-                    assert trap == 1,\
-                        f"Trap {trap} should have triggered didn't on rt:{rs: 09x}({x: 09x}) + rd:{rt: 09x}({y: 09x}) = rd:{rd: 08x}"
+                try:
+                    if should_trap:
+                        assert trap == 1,\
+                            f"Trap {trap} should have triggered didn't on rt:{rs: 09x}({x: 09x}) + rd:{rt: 09x}({y: 09x}) = rd:{rd: 08x}"
+                    else:
+                        assert rd == res,\
+                            f"{fun} rt:{rs: 09x} rd:{rt: 09x} should be {res: 09x} but was instead {rd: 09x}"
+                except AssertionError as e:
+                    print(f"\tFAIL:\n\t\t{e}\n")
                 else:
-                    assert rd == res,\
-                        f"rt:{rs: 09x}({x: 09x}) + rd:{rt: 09x}({y: 09x}) should be {res: 09x} but was instead {rd: 09x}"
-                
+                    print("\tPASS")                
                 yield Delay(1e-6)
 
     #sim.add_clock(1e-6) # Is this write for ICE?
