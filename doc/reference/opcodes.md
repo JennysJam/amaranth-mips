@@ -1,4 +1,4 @@
-# <span>MIPS Encoding Reference</span>
+# MIPS Encoding Reference
 
 -----
 
