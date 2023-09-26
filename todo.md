@@ -1,4 +1,4 @@
-- [ ] build an ALU module that takes in an rs and rt value, adds them, and produces an rd
+- [x] build an ALU module that takes in an rs and rt value, adds them, and produces an rd
 - [ ] extend the ALU to also take a funct value and use it to determine what operation to do
 - [ ] build a decoder module that takes in a 32-bit value and spits out the fields of the instruction
     + [ ] instruction in; opcode, rs, rt, rd, shamt, funct, imm, addr out
