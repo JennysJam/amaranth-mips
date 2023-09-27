@@ -46,7 +46,6 @@ class ALU(Elaboratable):
                     reg.eq(self.rs + self.rt),
                     self.rd.eq(reg)
                 ]
-                # if (signbit == signbit) then trap if the sign isn't the same
                 with m.If(self.rs[-1] == self.rt[-1]):
                    m.d.comb += self.ovf.eq(reg[-2] != self.rs[-1])
 
@@ -63,40 +62,30 @@ class ALU(Elaboratable):
                 ]
                 with m.If(self.rs[-1] != self.rt[-1]):
                     m.d.comb += self.ovf.eq(reg[-2] != self.rs[-1])
+
             with m.Case(Funct.SUBU):
                 m.d.comb += [
                     reg.eq(self.rs - self.rt),
                     self.rd.eq(reg),
-                    self.ovf.eq(0)
                 ]
             # Logical combinators
             with m.Case(Funct.AND):
-                m.d.comb += [
-                    self.rd.eq(self.rs & self.rt),
-                    self.ovf.eq(0)
-                ]
+                m.d.comb += self.rd.eq(self.rs & self.rt)
             with m.Case(Funct.OR):
-                m.d.comb += [
-                    self.rd.eq(self.rs | self.rt),
-                    self.ovf.eq(0),
-                ]
+                m.d.comb += self.rd.eq(self.rs | self.rt)
             with m.Case(Funct.XOR):
-                m.d.comb += [
-                    self.rd.eq(self.rs ^ self.rt),
-                    self.ovf.eq(0)
-                ]
+                m.d.comb += self.rd.eq(self.rs ^ self.rt)
             with m.Case(Funct.NOR):
-                m.d.comb += [
-                    self.rd.eq( ~ (self.rs | self.rt) ),
-                    self.ovf.eq(0)
-                ]
-            # Shifters
+                m.d.comb += self.rd.eq( ~ (self.rs | self.rt) )
+            # Shifts
             with m.Case(Funct.SLL):
-                m.d.comb += self.rd.eq(
-                    self.rs << self.rt[:6]
-                )
+                m.d.comb += self.rd.eq(self.rs << self.rt[:6])
+            with m.Case(Funct.SRA):
+                m.d.comb += self.rd.eq(self.rs >> self.rt[:6])
+            with m.Case(Funct.SRL):
+                m.d.comb += self.rd.eq(self.rs.as_signed() >> self.rt[:6])
             with m.Default():
-                pass # what do?
+                pass
 
         return m
 
