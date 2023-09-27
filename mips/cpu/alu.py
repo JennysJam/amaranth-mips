@@ -53,7 +53,6 @@ class ALU(Elaboratable):
                 m.d.comb += [
                     reg.eq(self.rs + self.rt), 
                     self.rd.eq(reg),
-                    self.ovf.eq(0)
                 ]
             with m.Case(Funct.SUB):
                 m.d.comb += [
