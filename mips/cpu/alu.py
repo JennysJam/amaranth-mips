@@ -7,8 +7,22 @@ import random
 
 class ALU(Elaboratable):
     """
-    Arithmetic Logic Unit (only does trapping add)
+    Arithmetic Logic Unit
 
+    The design of this unit is currently outputs *both* if the operation
+    would trap and the result. It's expected that the consumer of the ALU
+    module should perform logic on the output of ``ovf`` before routing.
+
+    It's possible that immediate operations (like ``adi``) can be routed in
+    via performing the logic to push them into the register
+    
+    Attributes:
+        rs (Signal[32]):    input signal 1
+        rt (Signal[32]):    input signal 2
+        func (Signal[6]):   input signal specifying function
+        rd (Signal[32]):    output signal
+        ovf (Signal): overflow signal (used for signalling traps)
+    
     """
     def __init__(self):
         # input
@@ -21,32 +35,35 @@ class ALU(Elaboratable):
 
     def elaborate(self, platform):
         m = Module()
-        sreg = Signal(shape=signed(33))
-        ureg = Signal(shape=unsigned(33))
+        reg = Signal(33)
 
         with m.Switch(self.func):
             with m.Case(Funct.ADD):
                 m.d.comb += [
-                    sreg.eq(self.rs + self.rt),
-                    self.ovf.eq(sreg[-1]),
-                    self.rd.eq(sreg)
+                    reg.eq(self.rs + self.rt),
+                    self.rd.eq(reg)
                 ]
+                # if (signbit == signbit) then trap if the sign isn't the same
+                with m.If(self.rs[-1] == self.rt[-1]):
+                   m.d.comb += self.ovf.eq(reg[-2] != self.rs[-1])
+
             with m.Case(Funct.ADDU):
                 m.d.comb += [
-                    ureg.eq(self.rs + self.rt), 
-                    self.rd.eq(ureg),
+                    reg.eq(self.rs + self.rt), 
+                    self.rd.eq(reg),
                     self.ovf.eq(0)
                 ]
             with m.Case(Funct.SUB):
                 m.d.comb += [
-                    sreg.eq(self.rs - self.rt),
-                    self.rd.eq(sreg),
-                    self.ovf.eq(sreg[-1])
+                    reg.eq(self.rs - self.rt),
+                    self.rd.eq(reg)
                 ]
+                with m.If(self.rs[-1] != self.rt[-1]):
+                    m.d.comb += self.ovf.eq(reg[-2] != self.rs[-1])
             with m.Case(Funct.SUBU):
                 m.d.comb += [
-                    ureg.eq(self.rs - self.rt),
-                    self.rd.eq(ureg),
+                    reg.eq(self.rs - self.rt),
+                    self.rd.eq(reg),
                     self.ovf.eq(0)
                 ]
             # Logical combinators
