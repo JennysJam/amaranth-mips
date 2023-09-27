@@ -5,3 +5,4 @@ build/
 *.gtkw
 __pycache__
 .pytest_cache/
+report-*.html
