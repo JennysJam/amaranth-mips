@@ -14,7 +14,10 @@ class ALU(Elaboratable):
     module should perform logic on the output of ``ovf`` before routing.
 
     It's possible that immediate operations (like ``adi``) can be routed in
-    via performing the logic to push them into the register
+    via performing the logic to push them into the register,
+    and then reading the result. Same for SLL vs SLLV, where one parses
+    a total amount from the instruction and the other from the lower bits
+    of a register.
     
     Attributes:
         rs (Signal[32]):    input signal 1
@@ -88,6 +91,10 @@ class ALU(Elaboratable):
                     self.ovf.eq(0)
                 ]
             # Shifters
+            with m.Case(Funct.SLL):
+                m.d.comb += self.rd.eq(
+                    self.rs << self.rt[:6]
+                )
             with m.Default():
                 pass # what do?
 
