@@ -114,7 +114,7 @@ def test_sub(rs: int, rt: int, rd: Optional[int], ovf: int):
         ]
 )
 def test_and(rs: int, rt: int, rd: int):
-    alu = ALU
+    alu = ALU()
     sim = Simulator(alu)
     sim.add_process(make_bench(alu, Funct.AND, rs, rt, rd))
     sim.run()
@@ -130,7 +130,7 @@ def test_and(rs: int, rt: int, rd: int):
         ]
 )
 def test_or(rs: int, rt: int, rd: int):
-    alu = ALU
+    alu = ALU()
     sim = Simulator(alu)
     sim.add_process(make_bench(alu, Funct.OR, rs, rt, rd))
     sim.run()
@@ -155,7 +155,7 @@ def test_or(rs: int, rt: int, rd: int):
         ]
 )
 def test_xor(rs: int, rt: int, rd: int):
-    alu = ALU
+    alu = ALU()
     sim = Simulator(alu)
     sim.add_process(make_bench(alu, Funct.XOR, rs, rt, rd))
     sim.run()
