@@ -199,9 +199,9 @@ on the left with 0 bits.
 
 ### Exception and Interrupt Instructions
 
-| Instruction | Type | Opcode/Function | Syntax | Operation |
-| ----------- | ---- | --------------- | ------ | --------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **trap**    | Trap | 011_010         | ???    | Trap      | Dependent on operating system; different values for immed26 specify different operations. See the [list of traps](traps) for information on what the different trap codes do. |
+| Instruction | Type | Opcode/Function | Syntax | Operation                                                                                                                                                                     |
+| ----------- | ---- | --------------- | ------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **trap**    | Juno | 011_010         | Trap   | Dependent on operating system; different values for immed26 specify different operations. |
 
 ## Opcode And Funct values
 
