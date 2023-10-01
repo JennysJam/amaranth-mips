@@ -23,7 +23,8 @@ class Funct(enum.Enum, shape=6):
     XOR = 0b100110
 
 class Opcode(enum.Enum, shape=6):
-    pass
+    SPECIAL = 0
+    "Special encoding for instructions that take register"
 
 class Instr(data.Struct):
     opcode: Opcode
@@ -41,6 +42,6 @@ class Instr(data.Struct):
             "imm": unsigned(16)
         }),
         "jmp": data.StructLayout({
-            "imm": unsigned(26)
+            "addr": unsigned(26)
         })
     })
