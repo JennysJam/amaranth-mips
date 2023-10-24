@@ -1,2 +1,3 @@
-def simulate(filename: str):
+
+def flash(*args):
     raise NotImplementedError()

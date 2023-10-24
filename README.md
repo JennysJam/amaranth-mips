@@ -1,3 +1,13 @@
+# Amaranth Mips
+
+This implements a simple version of MIPS 2 (the list of handled opcodes is stored in docs) in Amaranth, the Python HDL.
+
+## Usage
+
+Most of the code is handled via testing, which can be evoked with the `./test.sh` script. The `mips` CPU also itself acts as a CLI interface, altho most of the current operations are stubs that throw not implemented errors.
+
+## Progress
+
 - [x] build an ALU module that takes in an rs and rt value, adds them, and produces an rd
 - [ X ] extend the ALU to also take a funct value and use it to determine what operation to do
 - [ X ] build a decoder module that takes in a 32-bit value and spits out the fields of the instruction
@@ -13,5 +23,3 @@
     + [ ] the program data just as constants inside the module
 - [ ] wire up the program memory module to the decoder, hard-wire the address
 - [ ] make a pc register, increment it on every cycle, and hook it up to the address of the program memory
-
-:sparkles: you now have basically a cpu (it can't branch but it can calculate!)

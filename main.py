@@ -1,13 +1,22 @@
+#!/usr/bin/python3
 """
 entry point for running code
 """
 
 from argparse import ArgumentParser
-import mips.cli.sim as sim
+from mips.cli.sim import simulate
+from mips.cli.flash import flash
+from mips.cli.synth import synth
 
-ap = ArgumentParser()
+ap = ArgumentParser(
+    prog="Amaranth Mips",
+    description="CLI for Mips FPGA/Synth"
+)
+
 parsers = ap.add_subparsers(
-    dest="command"
+    prog="command",
+    description="command to evoke",
+    dest="command",
 )
 
 sim_parser = parsers.add_parser(
@@ -34,6 +43,10 @@ flash_parser = parsers.add_parser(
 args = ap.parse_args()
 
 if args.command == "sim":
-    sim.simulate(args.out)
+    simulate(args.out)
+elif args.command == "synth":
+    synth()
+elif args.command == "flash":
+    flash()
 else:
-    raise NotImplementedError(f"{args.command} not yet implemented")
+    ap.print_help()
