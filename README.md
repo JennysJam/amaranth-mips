@@ -9,9 +9,9 @@ Most of the code is handled via testing, which can be evoked with the `./test.sh
 ## Progress
 
 - [x] build an ALU module that takes in an rs and rt value, adds them, and produces an rd
-- [ X ] extend the ALU to also take a funct value and use it to determine what operation to do
-- [ X ] build a decoder module that takes in a 32-bit value and spits out the fields of the instruction
-    + [ X ] instruction in; opcode, rs, rt, rd, shamt, funct, imm, addr out
+- [x] extend the ALU to also take a funct value and use it to determine what operation to do
+- [x] build a decoder module that takes in a 32-bit value and spits out the fields of the instruction
+    + [x] instruction in; opcode, rs, rt, rd, shamt, funct, imm, addr out
 - [ ] build a register file module
     + [ ] takes in an rs, rt, spits out their stored values combinatorially
     + [ ] takes in an write enable, rd, and value, stores the value on the next cycle if enabled
