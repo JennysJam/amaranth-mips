@@ -1,36 +1,48 @@
 from amaranth import *
 from mips.cpu.isa import *
+from typing import *
+
 
 class RegisterFile(Elaboratable):
     """
     RegisterFile abstraction
 
     Attributes:
-        rin (Signal[5]): input, register number to interact with
-        write (Signal): input, flag to set to allow for writes
-        value (Signal[32]): input, value to be written (ignored if flag=0)
-        out (Signal[32]): output, value in register if stored
+        rs (Signal(5)): input register number 1
+        rt (Signal(5)): input register number 2
+        rs_out (Signal(32)): output data signal
+        rt_out (Signal(32)): output data location
     """
-    def __init__(self):
-        self.rin: Signal(5)
-        self.write: Signal()
-        self.value: Signal(5)
-        self.out: Signal(32)
+    def __init__(self, init: Optional[List[int]] =None):
+        self.rs = Signal(5)
+        self.rt = Signal(5)
+        self.rs_out = Signal(32)
+        self.rt_out = Signal(32)
+        self.mem = Memory(
+            width=32,
+            depth=31,
+            init=init if init else None
+        )
 
     def elaborate(self, platform):
         m = Module()
-        self._memory = Memory(
-            width=32,
-            depth=31
-        )
+        m.submodules.rdport1 = rdport1 = self.mem.read_port()
+        m.submodules.rdport2 = rdport2 = self.mem.read_port()
 
-        with m.If(self.rin == 0):
-            m.d.comb += self.out.eq(0)
+        with m.If(self.rs != 0):
+            m.d.comb += [
+                rdport1.addr.eq(self.rs-1),
+                self.rs_out.eq(rdport1.data),
+            ]
         with m.Else():
-            with m.If(self.write):
-                m.d.sync += [
-                    self.value.eq(0),
-                    self.write.eq(0)
-                ]
-            m.d.comb += self.out.eq(self._memory)
+            m.d.comb += self.rs_out.eq(0)
+        
+        with m.If(self.rt != 0):
+            m.d.comb += [
+                rdport2.addr.eq(self.rt - 1),
+                self.rt_out.eq(rdport2.data)
+            ]
+        with m.Else():
+            m.d.comb += self.rt_out.eq(0)
+
         return m
