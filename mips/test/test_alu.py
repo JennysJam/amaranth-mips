@@ -10,7 +10,7 @@ MAX_32U = 0xff_ff_ff_ff
 MAX_UNSIGN = 0x80_00_00_00
 MAX_SIGNED = 0x7f_ff_ff_ff
 
-def make_bench(alu: ALU, func: Funct, rs: int, rt: int, rd: int):
+def make_bench(alu: ALU, func: Funct, rs: int, rt: int, rd: int, shamt: int = 0):
     """
     Utility function to generate a callback that can be passed
     to simulator.add_process()
@@ -19,6 +19,7 @@ def make_bench(alu: ALU, func: Funct, rs: int, rt: int, rd: int):
         yield alu.func.eq(func)
         yield alu.rs.eq(rs)
         yield alu.rt.eq(rt)
+        yield alu.shamt.eq(shamt)
         yield Settle()
 
         res_rd = yield alu.rd
@@ -159,3 +160,11 @@ def test_xor(rs: int, rt: int, rd: int):
     sim = Simulator(alu)
     sim.add_process(make_bench(alu, Funct.XOR, rs, rt, rd))
     sim.run()
+
+
+@pytest.mark.parametrize(
+    "rs, rt, rd, h",
+    []
+)
+def test_sll(rs: int, rt: int, rd: int, h: int):
+    pass

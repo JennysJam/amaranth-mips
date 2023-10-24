@@ -1,5 +1,5 @@
 from amaranth import *
-import isa
+from mips.cpu.isa import *
 
 class Decoder(Elaboratable):
     """
@@ -20,19 +20,43 @@ class Decoder(Elaboratable):
         addr: address value
     """
     def __init__(self):
-        self.inst = Signal(32)
-        self.opcode = Signal(unsigned(6))
-        self.rs: Signal(unsigned(5))
+        self.inst = Signal(Instr) 
+        self.opcode = Signal(Opcode)
+        self.rs = Signal(unsigned(5))
         self.rt = Signal(unsigned(5))
         self.rd = Signal(unsigned(5))
-        self.func = Signal(unsigned(6))
-        self.shamt = Signal(unsigned(6))
+        self.funct = Signal(Funct)
+        self.shamt = Signal(unsigned(5))
         self.imm = Signal(unsigned(16))
         self.addr = Signal(26)
         pass
 
-    def elaborate(self, platform) -> Module:
+    def elaborate(self, platform):
         m = Module()
-        inst = Signal(isa.Inst)
-        
+
+        with m.Switch(self.inst.opcode):
+            with m.Case(Opcode.SPECIAL):
+                m.d.comb += [
+                    self.opcode.eq(Opcode.SPECIAL),
+                    self.rs.eq(self.inst.data.reg.rs),
+                    self.rt.eq(self.inst.data.reg.rt),
+                    self.rd.eq(self.inst.data.reg.rd),
+                    self.funct.eq(self.inst.data.reg.funct),
+                    self.shamt.eq(self.inst.data.reg.shamt)
+                ]
+            with m.Case(*IMM_OPCODE):
+                m.d.comb += [
+                    self.opcode.eq(self.inst.opcode),
+                    self.rs.eq(self.inst.data.imm.rs),
+                    self.rt.eq(self.inst.data.imm.rt),
+                    self.imm.eq(self.inst.data.imm.imm)
+                ]
+            with m.Case(*JMP_OPCODE):
+                m.d.comb += [
+                    self.opcode.eq(self.inst.opcode),
+                    self.addr.eq(self.inst.data.jmp.addr)
+                ]
+            with m.Default():
+                pass
+
         return m

@@ -31,7 +31,8 @@ class ALU(Elaboratable):
         # input
         self.rs = Signal(32)
         self.rt = Signal(32)
-        self.func = Signal(6)
+        self.shamt = Signal(5)
+        self.func = Signal(Funct)
         # output
         self.rd = Signal(32)
         self.ovf = Signal()
@@ -78,11 +79,23 @@ class ALU(Elaboratable):
                 m.d.comb += self.rd.eq( ~ (self.rs | self.rt) )
             # Shifts
             with m.Case(Funct.SLL):
+                m.d.comb += self.rd.eq(self.rs << self.shamt)
+            with m.Case(Funct.SLLV):
                 m.d.comb += self.rd.eq(self.rs << self.rt[:6])
             with m.Case(Funct.SRA):
+                m.d.comb += self.rd.eq(self.rs >> self.shamt)
+            with m.Case(Funct.SRAV):
                 m.d.comb += self.rd.eq(self.rs >> self.rt[:6])
             with m.Case(Funct.SRL):
                 m.d.comb += self.rd.eq(self.rs.as_signed() >> self.rt[:6])
+            with m.Case(Funct.SRLV):
+                m.d.comb += self.rd.eq(self.rs.as_signed() >> self.rt[:6])
+            # less than
+            with m.Case(Funct.SLT):
+                m.d.comb += self.rd.eq( self.rs.as_signed() < self.rt.as_signed() )
+            with m.Case(Funct.SLTU):
+                m.d.comb += self.rd.eq(self.rs < self.rt)
+
             with m.Default():
                 pass
 

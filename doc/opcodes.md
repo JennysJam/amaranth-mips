@@ -110,31 +110,31 @@ on the left with 0 bits.
 
 ### Arithmetic and Logical Instructions
 
-| Instruction | Type      | Opcode/Function | Syntax    | Operation                  |
-| ----------- | --------- | --------------- | --------- | -------------------------- |
-| **add**     | Register  | 100_000         | ArithLog  | $d = $s + $t               |
-| **addu**    | Register  | 100_001         | ArithLog  | $d = $s + $t               |
-| **addi**    | Immediate | 001_000         | ArithLogI | $t = $s + SE(i)            |
-| **addiu**   | Immediate | 001_001         | ArithLogI | $t = $s + SE(i)            |
-| **and**     | Register  | 100_100         | ArithLog  | $d = $s & $t               |
-| **andi**    | Immediate | 001_100         | ArithLogI | $t = $s & ZE(i)            |
-| **div**     | Register  | 011_010         | DivMult   | lo = $s / $t; hi = $s % $t |
-| **divu**    | Register  | 011_011         | DivMult   | lo = $s / $t; hi = $s % $t |
-| **mult**    | Register  | 011_000         | DivMult   | hi:lo = $s \* $t           |
-| **multu**   | Register  | 011_001         | DivMult   | hi:lo = $s \* $t           |
-| **nor**     | Register  | 100_111         | ArithLog  | $d = \~($s \| $t)          |
-| **or**      | Register  | 100_101         | ArithLog  | $d = $s \| $t              |
-| **ori**     | Immediate | 001_101         | ArithLogI | $t = $s \| ZE(i)           |
-| **sll**     | Register  | 000_000         | Shift     | $d = $t \<\< h             |
-| **sllv**    | Register  | 000_100         | ShiftV    | $d = $t \<\< $s            |
-| **sra**     | Register  | 000_011         | Shift     | $d = $t \>\> h             |
-| **srav**    | Register  | 000_111         | ShiftV    | $d = $t \>\> $s            |
-| **srl**     | Register  | 000_010         | Shift     | $d = $t \>\>\> h           |
-| **srlv**    | Register  | 000_110         | ShiftV    | $d = $t \>\>\> $s          |
-| **sub**     | Register  | 100_010         | ArithLog  | $d = $s - $t               |
-| **subu**    | Register  | 100_011         | ArithLog  | $d = $s - $t               |
-| **xor**     | Register  | 100_110         | ArithLog  | $d = $s ^ $t               |
-| **xori**    | Immediate | 001_110         | ArithLogI | $d = $s ^ ZE(i)            |
+| Instruction | Type      | Opcode/Function | Syntax    | Operation                      |
+| ----------- | --------- | --------------- | --------- | ------------------------------ |
+| **add**     | Register  | 100_000         | ArithLog  | \$d = \$s + \$t                |
+| **addu**    | Register  | 100_001         | ArithLog  | \$d = \$s + \$t                |
+| **addi**    | Immediate | 001_000         | ArithLogI | \$t = \$s + SE(i)              |
+| **addiu**   | Immediate | 001_001         | ArithLogI | \$t = \$s + SE(i)              |
+| **and**     | Register  | 100_100         | ArithLog  | \$d = \$s & \$t                |
+| **andi**    | Immediate | 001_100         | ArithLogI | \$t = \$s & ZE(i)              |
+| **div**     | Register  | 011_010         | DivMult   | lo = \$s / \$t; hi = \$s % \$t |
+| **divu**    | Register  | 011_011         | DivMult   | lo = \$s / \$t; hi = \$s % \$t |
+| **mult**    | Register  | 011_000         | DivMult   | hi:lo = \$s \* \$t             |
+| **multu**   | Register  | 011_001         | DivMult   | hi:lo = \$s \* \$t             |
+| **nor**     | Register  | 100_111         | ArithLog  | \$d = \~(\$s \| \$t)           |
+| **or**      | Register  | 100_101         | ArithLog  | \$d = \$s \| \$t               |
+| **ori**     | Immediate | 001_101         | ArithLogI | \$t = \$s \| ZE(i)             |
+| **sll**     | Register  | 000_000         | Shift     | \$d = \$t \<\< h               |
+| **sllv**    | Register  | 000_100         | ShiftV    | \$d = \$t \<\< \$s             |
+| **sra**     | Register  | 000_011         | Shift     | \$d = \$t \>\> h               |
+| **srav**    | Register  | 000_111         | ShiftV    | \$d = \$t \>\> \$s             |
+| **srl**     | Register  | 000_010         | Shift     | \$d = \$t \>\>\> h             |
+| **srlv**    | Register  | 000_110         | ShiftV    | \$d = \$t \>\>\> \$s           |
+| **sub**     | Register  | 100_010         | ArithLog  | \$d = \$s - \$t                |
+| **subu**    | Register  | 100_011         | ArithLog  | \$d = \$s - \$t                |
+| **xor**     | Register  | 100_110         | ArithLog  | \$d = \$s ^ \$t                |
+| **xori**    | Immediate | 001_110         | ArithLogI | \$d = \$s ^ ZE(i)              |
 
 ### Constant-Manipulating Instructions
 
@@ -145,30 +145,30 @@ on the left with 0 bits.
 
 #### Comparison Instructions
 
-| Instruction | Type      | Opcode/Function | Syntax    | Operation          |
-| ----------- | --------- | --------------- | --------- | ------------------ |
-| **slt**     | Register  | 101_010         | ArithLog  | $d = ($s \< $t)    |
-| **sltu**    | Register  | 101_001         | ArithLog  | $d = ($s \< $t)    |
-| **slti**    | Immediate | 001_010         | ArithLogI | $t = ($s \< SE(i)) |
-| **sltiu**   | Immediate | 001_001         | ArithLogI | $t = ($s \< SE(i)) |
+| Instruction | Type      | Opcode/Function | Syntax    | Operation            |
+| ----------- | --------- | --------------- | --------- | -------------------- |
+| **slt**     | Register  | 101_010         | ArithLog  | \$d = (\$s \< \$t)   |
+| **sltu**    | Register  | 101_001         | ArithLog  | \$d = (\$s \< \$t)   |
+| **slti**    | Immediate | 001_010         | ArithLogI | \$t = (\$s \< SE(i)) |
+| **sltiu**   | Immediate | 001_001         | ArithLogI | \$t = (\$s \< SE(i)) |
 
 ### Branch Instructions
 
-| Instruction | Type | Opcode/Function | Syntax  | Operation                     |
-| ----------- | ---- | --------------- | ------- | ----------------------------- |
-| **beq**     | Jump | 000_100         | Branch  | if ($s == $t) pc += i \<\< 2  |
-| **bgtz**    | Jump | 000_111         | BranchZ | if ($s \> 0) pc += i \<\< 2   |
-| **blez**    | Jump | 000_110         | BranchZ | if ($s \<= 0) pc += i \<\< 2  |
-| **bne**     | Jump | 000_101         | Branch  | if ($s \!= $t) pc += i \<\< 2 |
+| Instruction | Type      | Opcode/Function | Syntax  | Operation                       |
+| ----------- | --------- | --------------- | ------- | ------------------------------- |
+| **beq**     | Immediate | 000_100         | Branch  | if (\$s == \$t) pc += i \<\< 2  |
+| **bgtz**    | Immediate | 000_111         | BranchZ | if (\$s \> 0) pc += i \<\< 2    |
+| **blez**    | Immediate | 000_110         | BranchZ | if (\$s \<= 0) pc += i \<\< 2   |
+| **bne**     | Immediate | 000_101         | Branch  | if (\$s \!= \$t) pc += i \<\< 2 |
 
 ### Jump Instructions
 
-| Instruction | Type | Opcode/Function | Syntax | Operation                |
-| ----------- | ---- | --------------- | ------ | ------------------------ |
-| **j**       | Jump | 000_010         | Jump   | pc += i \<\< 2           |
-| **jal**     | Jump | 000_011         | Jump   | $31 = pc; pc += i \<\< 2 |
-| **jalr**    | Jump | 001_001         | JumpR  | $31 = pc; pc = $s        |
-| **jr**      | Jump | 001_000         | JumpR  | pc = $s                  |
+| Instruction | Type     | Opcode/Function | Syntax | Operation                 |
+| ----------- | -------- | --------------- | ------ | ------------------------- |
+| **j**       | Jump     | 000_010         | Jump   | pc += i \<\< 2            |
+| **jal**     | Jump     | 000_011         | Jump   | \$31 = pc; pc += i \<\< 2 |
+| **jalr**    | Register | 001_001         | JumpR  | \$31 = pc; pc = \$s       |
+| **jr**      | Register | 001_000         | JumpR  | pc = \$s                  |
 
 ### Load Instructions
 
@@ -190,17 +190,17 @@ on the left with 0 bits.
 
 ### Data Movement Instructions
 
-| Instruction | Type      | Opcode/Function | Syntax   | Operation |
-| ----------- | --------- | --------------- | -------- | --------- |
-| **mfhi**    | Immediate | 010_000         | MoveFrom | $d = hi   |
-| **mflo**    | Immediate | 010_010         | MoveFrom | $d = lo   |
-| **mthi**    | Immediate | 010_001         | MoveTo   | hi = $s   |
-| **mtlo**    | Immediate | 010_011         | MoveTo   | lo = $s   |
+| Instruction | Type     | Opcode/Function | Syntax   | Operation |
+| ----------- | -------- | --------------- | -------- | --------- |
+| **mfhi**    | Register | 010_000         | MoveFrom | \$d = hi  |
+| **mflo**    | Register | 010_010         | MoveFrom | \$d = lo  |
+| **mthi**    | Register | 010_001         | MoveTo   | hi = \$s  |
+| **mtlo**    | Register | 010_011         | MoveTo   | lo = \$s  |
 
 ### Exception and Interrupt Instructions
 
-| Instruction | Type | Opcode/Function | Syntax | Operation                                                                                                                                                                     |
-| ----------- | ---- | --------------- | ------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Instruction | Type | Opcode/Function | Syntax | Operation                                                                                 |
+| ----------- | ---- | --------------- | ------ | ----------------------------------------------------------------------------------------- |
 | **trap**    | Juno | 011_010         | Trap   | Dependent on operating system; different values for immed26 specify different operations. |
 
 ## Opcode And Funct values
